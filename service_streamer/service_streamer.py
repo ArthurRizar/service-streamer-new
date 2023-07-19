@@ -37,6 +37,9 @@ class Future(object):
         finished = self._finish_event.wait(timeout)
 
         if not finished:
+            future_cache = self._future_cache_ref()
+            if future_cache is not None:
+                del future_cache[self._id]
             raise TimeoutError("Task: %d Timeout" % self._id)
 
         # remove from future_cache
