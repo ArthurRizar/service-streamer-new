@@ -158,7 +158,10 @@ class _BaseStreamWorker(object):
         logger.info("[gpu worker %d] %s start working" % (self._pid, self))
 
         while True:
-            handled = self._run_once()
+            try:
+                handled = self._run_once()
+            except Exception as e:
+                logger.error("Error occurred", exc_info=True)
             if self._destroy_event and self._destroy_event.is_set():
                 break
             if not handled:
